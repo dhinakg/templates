@@ -1,0 +1,2 @@
+# templates
+Hex Fiend templates
