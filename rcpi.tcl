@@ -1,7 +1,7 @@
 little_endian
 
 section "RCPI" {
-	section "RCPI Info" {
+	section "Info" {
 		uint32 -hex "Type"
 		ascii 10 "Version"
 		ascii 40 "File Name"
@@ -35,11 +35,11 @@ section "RCPI" {
 		uint32 -hex "Type"
 		set sc [uint32 -hex "Sections Count"]
 		for {set i 0} {$i < $sc} {incr i} {
-			section "Unknown" {
+			section "Values" {
 				uint32 -hex "Unknown"
 				set c [uint32 -hex "Values Count"]
 				for {set j 0} {$j < $c} {incr j} {
-					section "RCPI Value" {
+					section "Value" {
 						uint32 -hex "Unknown"
 						ascii 4 "Type"
 					}
