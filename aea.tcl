@@ -8,7 +8,7 @@ proc fmtPfid {pfid} {
 		2 { format "Symmetric encryption, ECDSA Signed (%d)" $pfid }
 		3 { format "ECDHE Asymmetric Encryption (%d)" $pfid }
 		4 { format "ECDHE Asymmetric Encryption, ECDSA Signed (%d)" $pfid }
-		5 { format "SCrypt Password-Based Encryption (%d)" $pfid }
+		5 { format "scrypt Password-Based Encryption (%d)" $pfid }
 	}]
 }
 
@@ -39,7 +39,7 @@ section "Apple Encrypted Archive" {
 	ascii 4 "Magic"
 	set pfid [uint24]; move -3
 	entry "Profile ID" [fmtPfid $pfid] 3; move 3
-	uint8 "SCrypt Strength"
+	uint8 "scrypt Strength"
 	set as [uint32 -hex "Auth Data Size"]
 	if {$as} {
 		set maxpos [expr {[pos] + $as}]
@@ -88,7 +88,7 @@ section "Apple Encrypted Archive" {
 				2 { set cal 32 }
 			}
 			set shs [expr {$cal + 8}]
-			bytes 22 "Unknown"
+			bytes 22 "Reserved"
 		}
 	} else {
 		bytes 48 "Encrypted Root Header"
@@ -113,7 +113,7 @@ section "Apple Encrypted Archive" {
 						}
 						set curpos [pos]
 						move [expr {($shs * ($spc - 1 - $i)) + (0x20 * ($i + 1))}]
-						bytes 32 "Segment MAC"
+						bytes 32 "Segment HMAC-SHA256"
 						move [expr {$dataoff - (0x20 * $i)}]
 						if {$csz != 0} {
 							if {$osz > $csz} {
