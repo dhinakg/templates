@@ -2,13 +2,17 @@ little_endian
 
 proc fmtPfid {pfid} {
 	return [switch -- $pfid {
-		0 { format "No encryption, ECDSA Signed (%d)" $pfid }
-		1 { format "Symmetric encryption (%d)" $pfid }
-		105 { format "Decrypted symmetric encryption (%d)" $pfid }
-		2 { format "Symmetric encryption, ECDSA Signed (%d)" $pfid }
-		3 { format "ECDHE Asymmetric Encryption (%d)" $pfid }
+		0 { format "No Encryption, ECDSA Signed (%d)" $pfid }
+		1 { format "Symmetric Encryption, Unsigned (%d)" $pfid }
+		2 { format "Symmetric Encryption, ECDSA Signed (%d)" $pfid }
+		3 { format "ECDHE Asymmetric Encryption, Unsigned (%d)" $pfid }
 		4 { format "ECDHE Asymmetric Encryption, ECDSA Signed (%d)" $pfid }
 		5 { format "scrypt Password-Based Encryption (%d)" $pfid }
+		105 { format "Decrypted Symmetric Encryption, Unsigned (%d)" $pfid }
+		106 { format "Decrypted Symmetric Encryption, ECDSA Signed (%d)" $pfid }
+		107 { format "Decrypted ECDHE Asymmetric Encryption, Unsigned (%d)" $pfid }
+		108 { format "Decrypted ECDHE Asymmetric Encryption, ECDSA Signed (%d)" $pfid }
+		109 { format "Decrypted scrypt Password-Based Encryption (%d)" $pfid }
 	}]
 }
 
@@ -39,6 +43,10 @@ section "Apple Encrypted Archive" {
 	ascii 4 "Magic"
 	set pfid [uint24]; move -3
 	entry "Profile ID" [fmtPfid $pfid] 3; move 3
+	set is_dec [expr {($pfid - 0x69 >= 0) || $pfid == 0}]
+	if {$pfid >= 0x69} {
+		incr pfid -0x68
+	}
 	uint8 "scrypt Strength"
 	set as [uint32 -hex "Auth Data Size"]
 	if {$as} {
@@ -73,7 +81,7 @@ section "Apple Encrypted Archive" {
 	}
 	bytes 32 "Key Derivation Salt"
 	bytes 32 "Root Header HMAC-SHA256"
-	if {$pfid == 0 || $pfid == 0x69} {
+	if {$is_dec} {
 		section "Root Header" {
 			uint64 -hex "Original File Size"
 			uint64 -hex "Encrypted Archive Size"
@@ -94,7 +102,7 @@ section "Apple Encrypted Archive" {
 		bytes 48 "Encrypted Root Header"
 	}
 	bytes 0x20 "Cluster 0 Header HMAC-SHA256"
-	if {$pfid == 0 || $pfid == 0x69} {
+	if {$is_dec} {
 		set j 0
 		while {[pos] < [len]} {
 			section -collapsed [format "Cluster %d" $j] {
