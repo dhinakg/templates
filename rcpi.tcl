@@ -1,6 +1,6 @@
 little_endian
 
-section "RCPI" {
+section "Recipe" {
 	section "Info" {
 		uint32 -hex "Type"
 		ascii 10 "Version"
