@@ -121,13 +121,12 @@ section "Apple Encrypted Archive" {
 							} else {
 								bytes $csz "Segment Data"
 							}
+						} else {
+							sectionname [format "Empty Segment %d" $i]
 						}
 						set clusterEnd [pos]
 						incr dataoff $csz
 						goto $curpos
-						if {$clusterEnd == [len]} {
-							return -level 1
-						}
 					}
 				}
 				bytes 0x20 [format "Cluster %d Header HMAC-SHA256" [expr {$j + 1}]]
