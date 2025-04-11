@@ -248,7 +248,13 @@ proc aar {} {
 		while {[pos] < [len] && $i < 3000} {
 		#for {set i 0} {$i < 2} {incr i} { }
 			section "Header" {
-				requires [pos] 41413031
+				if {[catch {
+					requires [pos] 41413031
+				} result]} {
+					requires [pos] 59414131
+				} else {
+					# Use the result
+				}
 				ascii 4 "Magic"
 				set hs [uint16 -hex "Header Size"]
 				set maxpos [expr {[pos] - 6 + $hs}]
