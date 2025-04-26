@@ -184,7 +184,7 @@ proc fmtField {field} {
 }
 
 proc handlesubtype {type field} {
-     switch -- $type {
+    switch -- $type {
         "*" { }
         "1" { 
             if {$field == "TYP"} {
@@ -278,3 +278,4 @@ proc aar {} {
     }
 }
 aar
+
