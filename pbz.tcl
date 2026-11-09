@@ -13,6 +13,7 @@ entry "Type" [switch -- $type {
 	"f" { format "LZVN (%s)" $type }
 	"x" { format "LZMA (%s)" $type }
     "z" { format "ZLIB (%s)" $type }
+	"m" { format "LZRAVEN (%s)" $type }
     default { format "Unknown" }
 }] 1; move 1
 

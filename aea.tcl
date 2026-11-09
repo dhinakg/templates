@@ -25,6 +25,7 @@ proc fmtCompAlg {compalg} {
 		"f"	{ format "LZVN (%s)" $compalg }
 		"x"	{ format "LZMA (%s)" $compalg }
 		"z"	{ format "ZLIB (%s)" $compalg }
+		"m"	{ format "LZRAVEN (%s)" $compalg }
 		default { format "Unknown (%s)" $compalg }
 	}]
 }
